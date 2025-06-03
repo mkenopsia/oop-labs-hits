@@ -11,7 +11,7 @@ public class Solution implements Printable {
 
     @Override
     public void print() {
-        System.out.println("\t\t\tРешение: " + solutionText);
+        System.out.println("Решение: " + solutionText);
     }
 
     public String getSolutionText() {

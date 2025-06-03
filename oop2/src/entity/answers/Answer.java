@@ -1,17 +1,22 @@
 package entity.answers;
 
-public abstract class Answer {
-    private String answer;
+import entity.Solution;
 
-    public Answer(String answer) {
-        this.answer = answer;
+import java.util.List;
+
+public class Answer extends Solution {
+    private List<String> answers;
+
+    public Answer(String solutionText, List<String> answers) {
+        super(solutionText);
+        this.answers = answers;
     }
 
-    public String getAnswer() {
-        return answer;
+    public List<String> getAnswers() {
+        return answers;
     }
 
-    public void setAnswer(String answer) {
-        this.answer = answer;
+    public void setAnswers(List<String> answers) {
+        this.answers = answers;
     }
 }

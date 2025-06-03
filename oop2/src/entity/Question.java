@@ -1,16 +1,21 @@
 package entity;
 
+import api.Printable;
 import entity.answers.Answer;
 
-public class Question {
+public class Question implements Printable {
     private String questionText;
-    private Answer answer;
     private QuestionType questionType;
 
-    public Question(String questionText, Answer answer, QuestionType questionType) {
+    public Question(String questionText, QuestionType questionType) {
         this.questionText = questionText;
-        this.answer = answer;
         this.questionType = questionType;
+    }
+
+    @Override
+    public void print() {
+        System.out.println("\t\t\tТекст вопроса: " + this.questionText);
+        System.out.println("\t\t\tТип вопроса: " + this.questionType.getDescription());
     }
 
     public String getQuestionText() {
@@ -19,14 +24,6 @@ public class Question {
 
     public void setQuestionText(String questionText) {
         this.questionText = questionText;
-    }
-
-    public Answer getAnswer() {
-        return answer;
-    }
-
-    public void setAnswer(Answer answer) {
-        this.answer = answer;
     }
 
     public QuestionType getQuestionType() {

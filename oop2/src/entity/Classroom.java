@@ -1,8 +1,10 @@
 package entity;
 
 import api.Printable;
+import org.w3c.dom.ls.LSOutput;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Classroom implements Printable {
     private String classroomName;
@@ -18,12 +20,27 @@ public class Classroom implements Printable {
         System.out.println("Название класса: " + this.classroomName);
         if(topics.isEmpty()) {
             System.out.println("\tТем нет");
-        } else if(topics.size() == 1) {
+        } else {
             System.out.println("\tТемы: ");
+            System.out.println("------------------------------");
             for(var topic : topics) {
-                topic.print();
+                if(topic instanceof Module) {
+                    ((Module) topic).print();
+                } else {
+                    topic.print();
+                }
+                System.out.println("------------------------------");
             }
         }
+    }
+
+    public void addTopic(Topic topic) {
+        this.topics.add(topic);
+    }
+
+    public void removeTopic(String topicName) {
+        this.topics = this.topics
+                .stream().filter(topic -> !topic.getName().equals(topicName)).collect(Collectors.toList());
     }
 
     public String getClassroomName() {
