@@ -3,6 +3,8 @@ package service;
 import entity.ProgrammingLanguage;
 import org.w3c.dom.ls.LSOutput;
 import repository.ProgrammingLanguagesRepository;
+import utils.InputValidator;
+import utils.Printer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,17 +24,12 @@ public class ProgrammingLanguageService {
     }
 
     public ProgrammingLanguage getProgrammingLanguage(Scanner scanner) {
-        String inputOption = "";
         scanner.nextLine();
-        while(!this.repository.getAll().containsKey(inputOption)) {
-            System.out.println("Выберите язык программирования: ");
-            for(Map.Entry<String, ProgrammingLanguage> entry : this.repository.getAll().entrySet()) {
-                System.out.println(entry.getKey());
-            }
-            inputOption = scanner.nextLine();
-        }
+        var languages = this.repository.getAll().values().stream().toList();
+        Printer.printProgrammingLanguages(languages);
+        int languageIndex = InputValidator.validateProgrammingLanguageInput(scanner, languages.size());
 
-        return this.repository.get(inputOption);
+        return languages.get(languageIndex);
     }
 
     public List<ProgrammingLanguage> getLanguages(Scanner scanner) {
@@ -89,16 +86,14 @@ public class ProgrammingLanguageService {
                     break;
                 }
                 case 3: {
-                    String nameForEdit = "";
-                    while(!this.repository.getAll().containsKey(nameForEdit)) {
-                        System.out.println("Введите название языка для редактирования: ");
-                        nameForEdit = scanner.nextLine();
-                    }
+                    var languages = this.repository.getAll().values().stream().toList();
+                    Printer.printProgrammingLanguages(languages);
+                    int index = InputValidator.validateProgrammingLanguageInput(scanner, languages.size());
 
                     System.out.println("Введите новое название: ");
                     String newName = scanner.nextLine();
                     this.repository.save(newName, new ProgrammingLanguage(newName));
-                    this.repository.delete(nameForEdit);
+                    this.repository.delete(languages.get(index).getName());
 
                     break;
                 }

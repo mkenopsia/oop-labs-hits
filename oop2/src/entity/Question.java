@@ -1,7 +1,6 @@
 package entity;
 
 import api.Printable;
-import entity.answers.Answer;
 
 public class Question implements Printable {
     private String questionText;

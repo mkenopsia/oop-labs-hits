@@ -2,7 +2,6 @@ package service;
 
 import entity.Question;
 import entity.QuestionType;
-import entity.answers.Answer;
 import entity.tasks.Quiz;
 import utils.Printer;
 

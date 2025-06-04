@@ -4,6 +4,7 @@ import entity.Module;
 import entity.Section;
 import entity.Topic;
 import entity.tasks.Task;
+import entity.tasks.TaskWithRepository;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -89,6 +90,7 @@ public class TopicService {
                     System.out.println("Введите номер задания для удаления: ");
                     int indexForDeletion = scanner.nextInt();
 
+                    TaskService.getInstance().deleteTask(topicForEdit.getTasks().get(indexForDeletion));
                     topicForEdit.getTasks().remove(indexForDeletion);
                     break;
                 }

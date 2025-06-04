@@ -2,70 +2,26 @@ package service;
 
 import entity.*;
 import entity.Module;
+import entity.answers.QuizAnswer;
 import entity.tasks.AlgoTask;
 import entity.tasks.Quiz;
 import entity.tasks.Task;
 import entity.tasks.TaskWithRepository;
+import repository.TaskRepository;
 
 import java.util.*;
 
-public class TaskService { private static final TaskService INSTANCE = new TaskService();
+public class TaskService {
+    private final TaskRepository taskRepository;
+    private static final TaskService INSTANCE = new TaskService(new TaskRepository());
 
-    private TaskService() {
+    private TaskService(TaskRepository taskRepository) {
+        this.taskRepository = taskRepository;
     }
 
     public static TaskService getInstance() {
         return INSTANCE;
     }
-
-    public Map<String, List<Task>> getAllTasksFromClassrooms() {
-//        Deque<Topic> queue = new ArrayDeque<>(classroom.getTopics());
-
-        Map<String, List<Task>>  tasksByTopics = new HashMap<>();
-
-        for(Classroom classroom : ClassroomService.getInstance().getAllClassrooms().values()) {
-            Deque<Topic> queue = new ArrayDeque<>(classroom.getTopics());
-            List<Task> currTasks = new ArrayList<>();
-            while(!queue.isEmpty()) {
-                Topic currTopic = queue.pop();
-                if(currTopic instanceof Module) {
-                    queue.addAll(((Module) currTopic).getSections());
-                }
-                currTasks.addAll(currTopic.getTasks());
-            }
-            tasksByTopics.put(classroom.getClassroomName(), currTasks);
-        }
-
-        return tasksByTopics;
-    }
-
-    public List<Task> getAllTasksFromClassroom(Classroom classroom) {
-        Deque<Topic> queue = new ArrayDeque<>(classroom.getTopics());
-
-        List<Task> tasks = new ArrayList<>();
-        while(!queue.isEmpty()) {
-            Topic currTopic = queue.pop();
-            if(currTopic instanceof Module) {
-                queue.addAll(((Module) currTopic).getSections());
-            }
-            tasks.addAll(currTopic.getTasks());
-        }
-        return tasks;
-    }
-
-//    public List<Task> getAllTasksFromTopic(Topic topic) {
-//        Deque<Topic> queue = new ArrayDeque<>(classroom.getTopics());
-//
-//        List<Task> tasks = new ArrayList<>();
-//        while(!queue.isEmpty()) {
-//            Topic currTopic = queue.pop();
-//            if(currTopic instanceof Module) {
-//                queue.addAll(((Module) currTopic).getSections());
-//            }
-//            tasks.addAll(currTopic.getTasks());
-//        }
-//        return tasks;
-//    }
 
     public void editTasks(Scanner scanner, Topic topic) {
         int count = 0;
@@ -86,6 +42,8 @@ public class TaskService { private static final TaskService INSTANCE = new TaskS
 
     private void editAlgoTask(Scanner scanner, AlgoTask task) {
         int option = -1;
+        String oldName = task.getName();
+        String newName = null;
         while (option != 0) {
             System.out.println("======Выберите параметр для редактирования======");
             System.out.println("Изменить название: 1");
@@ -99,7 +57,7 @@ public class TaskService { private static final TaskService INSTANCE = new TaskS
                 case 1: {
                     scanner.nextLine();
                     System.out.println("Введите новое название: ");
-                    String newName = scanner.nextLine();
+                    newName = scanner.nextLine();
                     task.setName(newName);
                     break;
                 }
@@ -128,10 +86,19 @@ public class TaskService { private static final TaskService INSTANCE = new TaskS
                 }
             }
         }
+
+        if(newName != null) {
+            this.taskRepository.delete(oldName);
+            oldName = newName;
+        }
+
+        this.taskRepository.save(oldName, task);
     }
 
     private void editTaskWithRepository(Scanner scanner, TaskWithRepository task) {
         int option = -1;
+        String oldName = task.getName();
+        String newName = null;
         while (option != 0) {
             System.out.println("======Выберите параметр для редактирования======");
             System.out.println("Изменить название: 1");
@@ -145,7 +112,7 @@ public class TaskService { private static final TaskService INSTANCE = new TaskS
                 case 1: {
                     scanner.nextLine();
                     System.out.println("Введите новое название: ");
-                    String newName = scanner.nextLine();
+                    newName = scanner.nextLine();
                     task.setName(newName);
                     break;
                 }
@@ -172,10 +139,19 @@ public class TaskService { private static final TaskService INSTANCE = new TaskS
                 }
             }
         }
+
+        if(newName != null) {
+            this.taskRepository.delete(oldName);
+            oldName = newName;
+        }
+
+        this.taskRepository.save(oldName, task);
     }
 
     private void editQuiz(Scanner scanner, Quiz task) {
         int option = -1;
+        String oldName = task.getName();
+        String newName = null;
         while (option != 0) {
             System.out.println("======Выберите параметр для редактирования======");
             System.out.println("Изменить название: 1");
@@ -189,7 +165,7 @@ public class TaskService { private static final TaskService INSTANCE = new TaskS
                 case 1: {
                     scanner.nextLine();
                     System.out.println("Введите новое название: ");
-                    String newName = scanner.nextLine();
+                    newName = scanner.nextLine();
                     task.setName(newName);
                     break;
                 }
@@ -214,6 +190,13 @@ public class TaskService { private static final TaskService INSTANCE = new TaskS
                 }
             }
         }
+
+        if(newName != null) {
+            this.taskRepository.delete(oldName);
+            oldName = newName;
+        }
+
+        this.taskRepository.save(oldName, task);
     }
 
     public Task createTask(Scanner scanner) {
@@ -250,7 +233,9 @@ public class TaskService { private static final TaskService INSTANCE = new TaskS
 
         List<ProgrammingLanguage> languages = ProgrammingLanguageService.getInstance().getLanguages(scanner);
 
-        return new AlgoTask(name, text, example, languages);
+        AlgoTask task = new AlgoTask(name, text, example, languages);
+        this.taskRepository.save(name, task);
+        return task;
     }
 
     private TaskWithRepository createTaskWithRepository(Scanner scanner) {
@@ -264,7 +249,9 @@ public class TaskService { private static final TaskService INSTANCE = new TaskS
         System.out.println("Укажите ссылку на репозиторий: ");
         String link = scanner.nextLine();
 
-        return new TaskWithRepository(name, text, example, link);
+        TaskWithRepository task = new TaskWithRepository(name, text, example, link);
+        this.taskRepository.save(name, task);
+        return task;
     }
 
     private Quiz createQuiz(Scanner scanner) {
@@ -276,6 +263,16 @@ public class TaskService { private static final TaskService INSTANCE = new TaskS
 
         List<Question> questions = QuestionService.getInstance().createQuestions(scanner);
 
-        return new Quiz(name, text, "", questions);
+        Quiz task = new Quiz(name, text, "", questions);
+        this.taskRepository.save(name, task);
+        return task;
+    }
+
+    public void deleteTask(Task task) {
+        this.taskRepository.delete(task.getName());
+    }
+
+    public Task getTaskByName(String taskName) {
+        return this.taskRepository.get(taskName);
     }
 }

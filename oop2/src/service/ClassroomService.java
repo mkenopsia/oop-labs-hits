@@ -4,6 +4,7 @@ import entity.Classroom;
 import entity.Topic;
 import org.w3c.dom.ls.LSOutput;
 import repository.ClassroomRepository;
+import utils.InputValidator;
 import utils.Printer;
 
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class ClassroomService {
                 }
                 case 3: {
                     scanner.nextLine();
-                    System.out.println("Введите название для класса:");
+                    System.out.println("Введите название для нового класса:");
                     String name = scanner.nextLine();
                     this.repository.save(name, new Classroom(name, new ArrayList<>()));
                     break;
@@ -74,14 +75,11 @@ public class ClassroomService {
     }
 
     private void processClassroom(Scanner scanner) {
-        Printer.printRepositoryKeys(this.repository);
-        String className = "";
-        while(!this.repository.getAll().containsKey(className)) {
-            System.out.println("Введите название класса: ");
-            className = scanner.nextLine();
-        }
+        var classrooms = this.repository.getAll().values().stream().toList();
+        Printer.printClassrooms(classrooms);
+        int classroomIndex = InputValidator.validateClassroomInput(scanner, classrooms.size());
 
-        Classroom classroom = this.repository.get(className);
+        Classroom classroom = classrooms.get(classroomIndex);
         int option = -1;
         while(option != 0) {
             classroom.print();
@@ -116,23 +114,17 @@ public class ClassroomService {
                     break;
                 }
                 case 4: {
-                    if(classroom.getTopics().isEmpty()) {
+                    var topics = classroom.getTopics();
+                    if(topics.isEmpty()) {
                         System.out.println("Тем нет");
                         break;
                     }
-                    for(Topic topic : classroom.getTopics()) {
-                        System.out.println(topic.getName());
-                    }
-                    String nameTopicForEdit = "";
-                    scanner.nextLine();
-                    while(!classroom.getTopics().stream().map(Topic::getName).collect(Collectors.toSet()).contains(nameTopicForEdit)) {
-                        System.out.println("Выберите тему для редактирования: ");
-                        nameTopicForEdit = scanner.nextLine();
-                    }
-                    final String finalNameTopicForEdit = nameTopicForEdit;
-                    Topic topicForEdit = classroom.getTopics().stream().filter(t -> t.getName().equals(finalNameTopicForEdit)).findFirst().get();
 
-                    TopicService.getInstance().editTopic(scanner, topicForEdit);
+                    Printer.printTopics(topics);
+
+                    int topicIndex = InputValidator.validateTopicInput(scanner, topics.size());
+
+                    TopicService.getInstance().editTopic(scanner, topics.get(topicIndex));
                     break;
                 }
             }

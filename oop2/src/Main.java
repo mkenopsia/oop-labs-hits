@@ -10,8 +10,7 @@ public class Main {
         while(option != 0) {
             System.out.println("=========Выберите действие=========");
             System.out.println("Модерация классов: 1");
-            System.out.println("Посмотреть отправленные решения: 2");
-            System.out.println("Отправить решение: 3");
+            System.out.println("Перейти к решениям: 2");
             System.out.println("Выход из программы: 0");
             option = scanner.nextInt();
 
@@ -21,11 +20,10 @@ public class Main {
                     break;
                 }
                 case 2: {
-                    SolutionsService.getInstance().showSolutions(scanner);
+                    SolutionsService.getInstance().process(scanner);
                     break;
                 }
-                case 3: {
-                    SolutionsService.getInstance().process(scanner);
+                case 0: {
                     break;
                 }
             }
