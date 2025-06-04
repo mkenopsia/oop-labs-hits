@@ -1,7 +1,6 @@
 package entity;
 
-import api.Printable;
-import org.w3c.dom.ls.LSOutput;
+import entity.api.Printable;
 
 import java.util.List;
 import java.util.stream.Collectors;

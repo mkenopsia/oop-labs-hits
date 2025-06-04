@@ -1,6 +1,5 @@
 package repository;
 
-import api.Printable;
 import entity.Solution;
 
 import java.util.ArrayList;

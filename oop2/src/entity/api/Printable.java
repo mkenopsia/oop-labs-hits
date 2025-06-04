@@ -1,4 +1,4 @@
-package api;
+package entity.api;
 
 public interface Printable {
     void print();

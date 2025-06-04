@@ -9,6 +9,7 @@ import entity.answers.SingleOptionBetweenTwo;
 import entity.tasks.Quiz;
 import entity.tasks.Task;
 import repository.SolutionRepository;
+import service.api.Processor;
 import utils.InputValidator;
 import utils.Printer;
 
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-public class SolutionsService {
+public class SolutionsService implements Processor {
     private final SolutionRepository repository;
     private static final SolutionsService INSTANCE = new SolutionsService(new SolutionRepository());
 
@@ -29,6 +30,7 @@ public class SolutionsService {
         return INSTANCE;
     }
 
+    @Override
     public void process(Scanner scanner) {
         int option = -1;
         while (option != 0) {
@@ -159,13 +161,9 @@ public class SolutionsService {
 
     public void processSending(Scanner scanner) {
         List<Classroom> classrooms = ClassroomService.getInstance().getAllClassrooms().values().stream().toList();
-        int count = 0;
-        for (Classroom classroom : ClassroomService.getInstance().getAllClassrooms().values()) {
-            System.out.println(classroom.getClassroomName() + ": " + count++);
-        }
-        System.out.println("Выберите номер класса: ");
-        System.out.println("Назад: -1");
-        int classIndex = scanner.nextInt();
+
+        Printer.printClassrooms(classrooms);
+        int classIndex = InputValidator.validateClassroomInput(scanner, classrooms.size());
         if(classIndex == -1) return;
         if(classIndex < 0 || classIndex >= classrooms.size()) {
             System.out.println("\n\nВведите корректный номер класса\n\n");
@@ -201,16 +199,8 @@ public class SolutionsService {
                     break;
                 }
                 case 2: {
-                    int count = 0;
-                    for(Section section : module.getSections()) {
-                        System.out.println(count++ + ": " + section.getName());
-                    }
-
-                    int sectionIndex = scanner.nextInt();
-                    while(sectionIndex < 0 || sectionIndex >= module.getSections().size()) {
-                        System.out.println("Введите корректный номер секции для отправки решения: ");
-                        sectionIndex = scanner.nextInt();
-                    }
+                    Printer.printSections(module.getSections());
+                    int sectionIndex = InputValidator.validateSectionInput(scanner, module.getSections().size());
 
                     saveSolution(scanner, module.getSections().get(sectionIndex).getTasks());
                 }
@@ -230,13 +220,7 @@ public class SolutionsService {
         int count = 0;
 
         Printer.printTasks(tasks);
-
-        System.out.println("Выберите номер задания для отправки решения: ");
-        int taskIndex = scanner.nextInt();
-        while(taskIndex < 0 || taskIndex >= tasks.size()) {
-            System.out.println("Введите корректный номер задания для отправки решения: ");
-            taskIndex = scanner.nextInt();
-        }
+        int taskIndex = InputValidator.validateTaskInput(scanner, tasks.size());
 
         Task chosenTask = tasks.get(taskIndex);
 

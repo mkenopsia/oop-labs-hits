@@ -1,6 +1,6 @@
 package entity;
 
-import api.Printable;
+import entity.api.Printable;
 
 public class ProgrammingLanguage extends NamedEntity implements Printable {
     public ProgrammingLanguage(String name) {

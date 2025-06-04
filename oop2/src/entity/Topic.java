@@ -1,6 +1,6 @@
 package entity;
 
-import api.Printable;
+import entity.api.Printable;
 import entity.tasks.Task;
 
 import java.util.List;

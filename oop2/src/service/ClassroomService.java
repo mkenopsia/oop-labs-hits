@@ -2,18 +2,16 @@ package service;
 
 import entity.Classroom;
 import entity.Topic;
-import org.w3c.dom.ls.LSOutput;
 import repository.ClassroomRepository;
+import service.api.Processor;
 import utils.InputValidator;
 import utils.Printer;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
-public class ClassroomService {
+public class ClassroomService implements Processor {
     private final ClassroomRepository repository;
     private static final ClassroomService INSTANCE = new ClassroomService(new ClassroomRepository());
 
@@ -25,6 +23,7 @@ public class ClassroomService {
         return INSTANCE;
     }
 
+    @Override
     public void process(Scanner scanner) {
         int option = -1;
         while(option != 0) {
@@ -76,6 +75,12 @@ public class ClassroomService {
 
     private void processClassroom(Scanner scanner) {
         var classrooms = this.repository.getAll().values().stream().toList();
+
+        if(classrooms.isEmpty()) {
+            System.out.println("Классов нет");
+            return;
+        }
+
         Printer.printClassrooms(classrooms);
         int classroomIndex = InputValidator.validateClassroomInput(scanner, classrooms.size());
 

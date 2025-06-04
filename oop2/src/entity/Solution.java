@@ -1,6 +1,6 @@
 package entity;
 
-import api.Printable;
+import entity.api.Printable;
 
 public class Solution implements Printable {
     private String solutionText;

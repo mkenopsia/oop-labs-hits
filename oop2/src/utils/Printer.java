@@ -1,6 +1,6 @@
 package utils;
 
-import api.Printable;
+import entity.api.Printable;
 import entity.*;
 import entity.Module;
 import entity.answers.QuizAnswer;
@@ -106,6 +106,13 @@ public class Printer {
             } else {
                 System.out.println("\tРешение №" + count++ + ": " + solution.getSolutionText());
             }
+        }
+    }
+
+    public static void printSections(List<Section> sections) {
+        int pos = 0;
+        for(Section section : sections) {
+            System.out.println(section.getName() + ": " + pos);
         }
     }
 }

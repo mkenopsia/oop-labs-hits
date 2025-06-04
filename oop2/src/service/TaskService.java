@@ -1,15 +1,16 @@
 package service;
 
-import entity.*;
-import entity.Module;
-import entity.answers.QuizAnswer;
+import entity.ProgrammingLanguage;
+import entity.Question;
+import entity.Topic;
 import entity.tasks.AlgoTask;
 import entity.tasks.Quiz;
 import entity.tasks.Task;
 import entity.tasks.TaskWithRepository;
 import repository.TaskRepository;
 
-import java.util.*;
+import java.util.List;
+import java.util.Scanner;
 
 public class TaskService {
     private final TaskRepository taskRepository;

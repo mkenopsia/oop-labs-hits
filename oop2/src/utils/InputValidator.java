@@ -46,4 +46,15 @@ public class InputValidator {
 
         return languageIndex;
     }
+
+    public static int validateSectionInput(Scanner scanner, int size) {
+        System.out.println("Выберите номер секции для редактирования: ");
+        int index = scanner.nextInt();
+        while (index < 0 || index >= size) {
+            System.out.println("\n\nВведите корректный номер секции\n\n");
+            index = scanner.nextInt();
+        }
+
+        return index;
+    }
 }

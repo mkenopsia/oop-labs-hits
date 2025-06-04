@@ -1,10 +1,9 @@
 package repository;
 
-import api.Printable;
+import entity.api.Printable;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public abstract class CrudRepository<T extends Printable> {
     protected Map<String, T> storage = new HashMap<>();

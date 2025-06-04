@@ -2,6 +2,10 @@ package service;
 
 import entity.Question;
 import entity.QuestionType;
+import entity.Solution;
+import entity.answers.FreeResponseAnswer;
+import entity.answers.SingleOptionBetweenSeveral;
+import entity.answers.SingleOptionBetweenTwo;
 import entity.tasks.Quiz;
 import utils.Printer;
 
@@ -27,9 +31,9 @@ public class QuestionService {
             option = scanner.nextInt();
             switch (option) {
                 case 1: {
-                        questions.add(createQuestion(scanner));
-                    }
+                    questions.add(createQuestion(scanner));
                     break;
+                }
                 case 0: {
                     break;
                 }
@@ -53,19 +57,25 @@ public class QuestionService {
                     scanner.nextLine();
                     System.out.println("Введите вопрос: ");
                     String questionContent = scanner.nextLine();
-                    return new Question(questionContent, QuestionType.CHOICE_BETWEEN_TWO);
+                    System.out.println("Введите ответ на вопрос: ");
+                    String answer = scanner.nextLine();
+                    return new Question(questionContent, QuestionType.CHOICE_BETWEEN_TWO, new SingleOptionBetweenTwo(answer));
                 }
                 case 2: {
                     scanner.nextLine();
                     System.out.println("Введите вопрос: ");
                     String questionContent = scanner.nextLine();
-                    return new Question(questionContent, QuestionType.CHOICE_BETWEEN_SEVERAL);
+                    System.out.println("Введите ответ на вопрос: ");
+                    String answer = scanner.nextLine();
+                    return new Question(questionContent, QuestionType.CHOICE_BETWEEN_SEVERAL, new SingleOptionBetweenSeveral(answer));
                 }
                 case 3: {
                     scanner.nextLine();
                     System.out.println("Введите вопрос: ");
                     String questionContent = scanner.nextLine();
-                    return new Question(questionContent, QuestionType.FREE_RESPONSE);
+                    System.out.println("Введите ответ на вопрос: ");
+                    String answer = scanner.nextLine();
+                    return new Question(questionContent, QuestionType.FREE_RESPONSE, new FreeResponseAnswer(answer));
                 }
             }
         }
@@ -128,7 +138,21 @@ public class QuestionService {
         } else {
             type = QuestionType.FREE_RESPONSE;
         }
+
+        Solution solution;
+        System.out.println("~~~~~Старый ответ: " + question.getAnswer() + "~~~~~");
+        System.out.println("Введите новый ответ на вопрос: ");
+        String newAnswer = scanner.nextLine();
+        if(typeIndex == 1) {
+            solution = new SingleOptionBetweenTwo(newAnswer);
+        } else if (typeIndex == 2) {
+            solution = new SingleOptionBetweenSeveral(newAnswer);
+        } else {
+            solution = new FreeResponseAnswer(newAnswer);
+        }
+
         question.setQuestionText(newText);
         question.setQuestionType(type);
+        question.setAnswer(solution);
     }
 }

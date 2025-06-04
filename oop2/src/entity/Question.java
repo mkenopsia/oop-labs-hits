@@ -1,14 +1,16 @@
 package entity;
 
-import api.Printable;
+import entity.api.Printable;
 
 public class Question implements Printable {
     private String questionText;
     private QuestionType questionType;
+    private Solution answer;
 
-    public Question(String questionText, QuestionType questionType) {
+    public Question(String questionText, QuestionType questionType, Solution answer) {
         this.questionText = questionText;
         this.questionType = questionType;
+        this.answer = answer;
     }
 
     @Override
@@ -31,5 +33,13 @@ public class Question implements Printable {
 
     public void setQuestionType(QuestionType questionType) {
         this.questionType = questionType;
+    }
+
+    public Solution getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(Solution answer) {
+        this.answer = answer;
     }
 }

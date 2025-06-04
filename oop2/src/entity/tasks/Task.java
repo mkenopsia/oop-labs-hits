@@ -1,8 +1,7 @@
 package entity.tasks;
 
-import api.Printable;
+import entity.api.Printable;
 import entity.NamedEntity;
-import entity.Solution;
 
 public abstract class Task extends NamedEntity implements Printable {
     private String text;

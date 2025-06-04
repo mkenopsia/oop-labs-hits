@@ -3,10 +3,11 @@ package service;
 import entity.Module;
 import entity.Section;
 import entity.Topic;
-import entity.tasks.Task;
-import entity.tasks.TaskWithRepository;
+import utils.InputValidator;
+import utils.Printer;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class TopicService {
@@ -46,7 +47,6 @@ public class TopicService {
         System.out.println("Введите название модуля: ");
         String name = scanner.nextLine();
         System.out.println("Виден студентам: (д/н)");
-        String input = "";
         boolean isVisible = scanner.nextLine().equals("д");
         return new Module(name, isVisible, new ArrayList<>(), new ArrayList<>());
     }
@@ -82,13 +82,8 @@ public class TopicService {
                     break;
                 }
                 case 2: {
-                    int pos = 0;
-                    for(Task task : topicForEdit.getTasks()) {
-                        System.out.println(task.getName() + ": " + pos);
-                    }
-
-                    System.out.println("Введите номер задания для удаления: ");
-                    int indexForDeletion = scanner.nextInt();
+                    Printer.printTasks(topicForEdit.getTasks());
+                    int indexForDeletion = InputValidator.validateTaskInput(scanner, topicForEdit.getTasks().size());
 
                     TaskService.getInstance().deleteTask(topicForEdit.getTasks().get(indexForDeletion));
                     topicForEdit.getTasks().remove(indexForDeletion);
@@ -117,15 +112,8 @@ public class TopicService {
                         System.out.println("Секций нет");
                         break;
                     }
-                    int pos = 0;
-                    for(Section section : ((Module) topicForEdit).getSections()) {
-                        System.out.println(section.getName() + ": " + pos);
-                    }
 
-                    System.out.println("Выберите номер секции для редактирования: ");
-                    int index = scanner.nextInt();
-
-                    editTopic(scanner, ((Module) topicForEdit).getSections().get(index));
+                    editSection(scanner, ((Module) topicForEdit).getSections());
                     break;
                 }
                 case 7: {
@@ -140,5 +128,12 @@ public class TopicService {
         }
     }
 
+    private void editSection(Scanner scanner, List<Section> sections) {
+        Printer.printSections(sections);
+
+        int index = InputValidator.validateSectionInput(scanner, sections.size());
+
+        editTopic(scanner, sections.get(index));
+    }
 
 }

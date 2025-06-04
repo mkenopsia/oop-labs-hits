@@ -1,17 +1,16 @@
 package service;
 
 import entity.ProgrammingLanguage;
-import org.w3c.dom.ls.LSOutput;
 import repository.ProgrammingLanguagesRepository;
+import service.api.Processor;
 import utils.InputValidator;
 import utils.Printer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
-public class ProgrammingLanguageService {
+public class ProgrammingLanguageService implements Processor {
     private final ProgrammingLanguagesRepository repository;
     private static final ProgrammingLanguageService INSTANCE = new ProgrammingLanguageService(new ProgrammingLanguagesRepository());
 
@@ -48,7 +47,7 @@ public class ProgrammingLanguageService {
                     break;
                 }
                 case 2: {
-                    editLanguages(scanner);
+                    process(scanner);
                     break;
                 }
                 case 0: {
@@ -59,17 +58,23 @@ public class ProgrammingLanguageService {
         return languages;
     }
 
-    public void editLanguages(Scanner scanner) {
+    @Override
+    public void process(Scanner scanner) {
         int option = -1;
         while (option != 0) {
             System.out.println("======Выберите действие:======");
-            System.out.println("Добавить новый язык: 1");
-            System.out.println("Удалить язык: 2");
-            System.out.println("Изменить язык: 3");
+            System.out.println("Показать все языки: 1");
+            System.out.println("Добавить новый язык: 2");
+            System.out.println("Удалить язык: 3");
+            System.out.println("Изменить язык: 4");
             System.out.println("Выйти: 0");
             option = scanner.nextInt();
             switch (option) {
                 case 1: {
+                    Printer.printProgrammingLanguages(this.repository.getAll().values().stream().toList());
+                    break;
+                }
+                case 2: {
                     scanner.nextLine();
                     System.out.println("Введите название языка: ");
                     String name = scanner.nextLine();
@@ -77,7 +82,7 @@ public class ProgrammingLanguageService {
 
                     break;
                 }
-                case 2: {
+                case 3: {
                     scanner.nextLine();
                     System.out.println("Введите название языка для удаления: ");
                     String nameForDeletion = scanner.nextLine();
@@ -85,7 +90,7 @@ public class ProgrammingLanguageService {
 
                     break;
                 }
-                case 3: {
+                case 4: {
                     var languages = this.repository.getAll().values().stream().toList();
                     Printer.printProgrammingLanguages(languages);
                     int index = InputValidator.validateProgrammingLanguageInput(scanner, languages.size());
