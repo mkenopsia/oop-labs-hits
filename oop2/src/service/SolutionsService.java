@@ -102,6 +102,11 @@ public class SolutionsService implements Processor {
                 break;
             }
 
+            if(currTopics.isEmpty()) {
+                System.out.println("Тем нет");
+                return;
+            }
+
             Printer.printTopics(currTopics);
             int topicIndex = InputValidator.validateTopicInput(scanner, currTopics.size());
 

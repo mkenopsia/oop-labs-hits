@@ -63,14 +63,17 @@ public class ClassroomService implements Processor {
     }
 
     private void deleteClassroom(Scanner scanner) {
-        Printer.printRepositoryKeys(repository);
-        String className = "";
-        while(!repository.getAll().containsKey(className)) {
-            System.out.println("Введите название класса для удаления: ");
-            className = scanner.nextLine();
+        var classrooms = this.repository.getAll().values().stream().toList();
+
+        if(classrooms.isEmpty()) {
+            System.out.println("Классов нет");
+            return;
         }
 
-        this.repository.delete(className);
+        Printer.printClassrooms(classrooms);
+        int classroomIndex = InputValidator.validateClassroomInput(scanner, classrooms.size());
+
+        this.repository.delete(classrooms.get(classroomIndex).getClassroomName());
     }
 
     private void processClassroom(Scanner scanner) {
